@@ -6,7 +6,7 @@
     $validate = new Validate();
     $output = array();
 
-    if($_POST['page']) {
+    if(isset($_POST['page'])) {
         //Execute this block of code if the page from which the data is coming is from a register page
         //and check that by checking if the hidden value for page is register
         if($_POST['page'] === 'register') {
@@ -29,7 +29,7 @@
                         );
                     }
                     else {
-                        //Get all data relevant for moving file into images folder and
+                        //Get data relevant for moving file into images folder and
                         //sending filepath to the database
                         $cms->filedata = $_FILES['user_image'];
 
@@ -38,7 +38,7 @@
                         $validate->passwordLength($_POST['password']);
                         $validate->passwordsMatch($_POST['password'], $_POST['conf_password']);
                         $validate->imageUploaded($cms->filedata);
-                        $validate->extensionAllowed($cms->filedata);
+                        $validate->allowedExtension($cms->filedata);
                         $validate->checkImageSize($cms->filedata);
                         $validate->errorsExist();
 
@@ -48,7 +48,7 @@
                             $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
                             $username = filter_var($_POST['username'], FILTER_SANITIZE_STRING);
                             $gender = $_POST['gender'];
-                            $user_image = $cms->move_user_image();
+                            $user_image = $cms->move_user_image('user_images');
 
                             $cms->data = array(
                                 ':email' => $email,
@@ -80,8 +80,9 @@
                     );
                 }
     
+                $validate->errors = [];
+
                 echo json_encode($output);
-    
             }
         }
         
@@ -131,6 +132,71 @@
                     );
                 }
     
+                echo json_encode($output);
+            }
+        }
+
+        //Execute this block of code if data is coming from a add_news page
+        //and we check this by checking if the hidden value for page is add_news
+        if($_POST['page'] === 'add_news') {
+            //Execute this block of code if data is coming from the add_news page
+            //and we check this by checking if the hidden value for action is add_news
+            if($_POST['action'] == 'add_news') {
+                //Get data relevant for moving file into images folder and
+                //sending filepath to the database
+                $cms->filedata = $_FILES['news_image'];
+
+                //Validate data on serverside
+                $validate->isEmpty($_POST['news_title'], $_POST['news_body']);
+                $validate->imageUploaded($cms->filedata);
+                $validate->allowedExtension($cms->filedata);
+                $validate->checkImageSize($cms->filedata);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Get the username of the user that is submitting the news
+                    $cms->data = array(
+                        ':user_id' => $_SESSION['user_id'],
+                    );
+                    
+                    $cms->query = 'SELECT * FROM users_table WHERE id = :user_id';
+                    
+                    $result = $cms->result();
+                    
+                    $username = $result[0]['username'];
+                
+                    //Sanitize data, encrypt the password, store gender in a variable, move image to images folder
+                    //and return new image name
+                    $news_title = filter_var($_POST['news_title'], FILTER_SANITIZE_STRING);
+                    $news_body = filter_var($_POST['news_body'], FILTER_SANITIZE_STRING);
+                    $news_image = $cms->move_user_image('news_images');
+
+                    //Insert data into the database
+                    $cms->data = array(
+                        ':news_title' => $news_title,
+                        ':news_body' => $news_body,
+                        ':news_author' => $username,
+                        ':news_image' => $news_image,
+                        ':approved' => 0,
+                    );
+
+                    $cms->query = 'INSERT INTO news_table(news_title, news_body, news_author, news_image, approved) 
+                    VALUES (:news_title, :news_body, :news_author, :news_image, :approved)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd the news!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+
+                $validate->errors = [];
+
                 echo json_encode($output);
             }
         }
