@@ -14,14 +14,14 @@
             </div>
             <div class="card-body">
                 <div id="message"></div>
-                <form action="post" id="news_form" enctype="multipart/form-data">
+                <form method="post" id="news_form" enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="float-left">News Title</label>
                         <input type="text" name="news_title" id="news_title" class="form-control" placeholder="Enter News Title">
                     </div>
                     <div class="form-group">
                         <label class="float-left">News Body</label>
-                        <textarea class="form-control" name="news_title" id="news_title" rows="3" placeholder="Enter News Title"></textarea>
+                        <textarea class="form-control" name="news_body" id="news_body" rows="3" placeholder="Enter News Text"></textarea>
                     </div>
                     <div class="form-group">
                         <label class="float-left">News Image</label>
@@ -29,8 +29,8 @@
                         <small class="float-left form-text text-muted">Supported file extensions: gif, jpeg, jpg, png</small>
                     </div>
                     <div class="form-group clearfix mt-5">
-                        <input type="hidden" name="page" value="register">
-                        <input type="hidden" name="action" value="user_register">
+                        <input type="hidden" name="page" value="add_news">
+                        <input type="hidden" name="action" value="add_news">
                         <input type="submit" name="add_news" id="add_news" class="float-left btn btn-info" value="Add">
                     </div>
                 </form>
@@ -42,16 +42,19 @@
 <script src="./classes/Validate.js"></script>
 <script>
     $(document).ready(() => {
-        $('#add_news').click((e) => {
+        let validate = new Validate();
+        let message = $('#message');
+
+        $('#news_form').submit((e) => {
             e.preventDefault();
 
+            let form = $('#news_form').get(0);
             let news_title = $('#news_title').val();
             let news_body = $('#news_body').val();
-            let news_image = $('#news_image');
-
+            let news_image = $('#news_image').val();
+            
             //Check if all fields are valid
-            validate.isEmpty(news_title, news_body);
-            validate.imageUploaded(image);
+            validate.isEmpty(news_title, news_body, news_image);
             validate.showErrors(message);  
 
             //If all fields are valid, send the data to the ajax_action.php
@@ -59,8 +62,11 @@
                 $.ajax({
                     url: "ajax_action.php",
                     method: "POST",
-                    data: $('#news_form').serialize(),
+                    data: new FormData(form),
                     dataType: "json",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
                     beforeSend: () => {
                         $('#add_news').attr('disabled', 'disabled');
                         $('#add_news').val('Please wait...');
