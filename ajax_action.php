@@ -132,6 +132,8 @@
                     );
                 }
     
+                $validate->errors = [];
+                
                 echo json_encode($output);
             }
         }
