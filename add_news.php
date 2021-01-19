@@ -27,8 +27,8 @@
                         <small class="float-left form-text text-muted">Supported file extensions: gif, jpeg, jpg, png</small>
                     </div>
                     <div class="form-group clearfix mt-5">
-                        <input type="hidden" name="page" value="register">
-                        <input type="hidden" name="action" value="user_register">
+                        <input type="hidden" name="page" value="add_news">
+                        <input type="hidden" name="action" value="add_news">
                         <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
                         <input type="submit" name="add_news" id="add_news" class="float-left btn btn-info" value="Add">
                     </div>
