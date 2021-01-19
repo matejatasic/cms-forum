@@ -50,6 +50,13 @@
             exit();
         }
 
+        //Redirect the user if he is not logged in to the index page 
+        public function user_session() {
+            if(isset($_SESSION['user_id'])) {
+                $this->redirect('index.php');
+            }
+        }
+
         //Return array of the executed statement
         public function result() {
             $this->execute_query();
