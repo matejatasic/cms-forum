@@ -63,30 +63,33 @@
         let validate = new Validate();
         let message = $('#message');
 
-        $('#user_register').click((e) => {
+        $('#register_form').submit((e) => {
             e.preventDefault();
 
-            email = $('#email').val();
-            password = $('#password').val();
-            conf_password = $('#conf_password').val();
-            username = $('#username').val();
-            gender = $('#gender').val();
-            image = $('#user_image');
-
+            let form = $('#register_form').get(0);
+            let email = $('#email').val();
+            let password = $('#password').val();
+            let conf_password = $('#conf_password').val();
+            let username = $('#username').val();
+            let gender = $('#gender').val();
+            let image = $('#user_image').val();
+            
             //Check if all fields are valid
-            validate.isEmpty(email, password, conf_password, username, gender);
+            validate.isEmpty(email, password, conf_password, username, gender, image);
             validate.passwordLength(password);  
             validate.passwordsMatch(password, conf_password);
-            validate.imageUploaded(image);
             validate.showErrors(message);  
-
+        
             //If all fields are valid, send the data to the ajax_action.php
             if(validate.isValid) {
                 $.ajax({
                     url: "ajax_action.php",
                     method: "POST",
-                    data: $('#register_form').serialize(),
+                    data: new FormData(form),
                     dataType: "json",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
                     beforeSend: () => {
                         $('#user_register').attr('disabled', 'disabled');
                         $('#user_register').val('Please wait...');
