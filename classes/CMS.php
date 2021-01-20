@@ -34,14 +34,14 @@
         }
 
         //Move file to specific folder
-        public function move_user_image() {
-            $file_extension = pathinfo($this->filedata, PATHINFO_EXTENSION);
+        public function move_user_image($image_folder) {
+            $file_extension = pathinfo($this->filedata['name'], PATHINFO_EXTENSION);
             $new_name = uniqid() . '.' . $file_extension;
             $source_path = $this->filedata['tmp_name'];
-            $target_path = './images/user_images' . $new_name;
+            $target_path = "./images/$image_folder/$new_name";
             move_uploaded_file($source_path, $target_path);
 
-            return $new_name;
+            return $target_path;
         }
 
         //Redirect to the page that is passed in
