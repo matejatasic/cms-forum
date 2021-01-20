@@ -35,14 +35,6 @@ class Validate {
         }
     }
 
-    //Check if file input is empty
-    imageUploaded(image) {
-        if(image.files.length == 0) {
-            this.msg = '<div class="alert alert-danger">Chose Image to upload!</div>';
-            this.checkError(this.msg);
-        }
-    }
-
     //Shows all errors if there are any or gives the 
     //valid property boolean true value
     showErrors(message) {
@@ -69,4 +61,3 @@ class Validate {
         window.location.replace($path);
     }
 }
-
