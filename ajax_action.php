@@ -132,8 +132,6 @@
                     );
                 }
     
-                $validate->errors = [];
-                
                 echo json_encode($output);
             }
         }
@@ -196,7 +194,7 @@
                         'error' => $validate->errors,
                     );
                 }
-
+                
                 $validate->errors = [];
 
                 echo json_encode($output);
