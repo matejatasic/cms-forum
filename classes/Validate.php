@@ -48,7 +48,8 @@
         }
 
         //Check if extension is in the allowed extension array
-        public function allowedExtension($file_ext) {
+        public function allowedExtension($file) {
+            $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
             if(!in_array($file_ext, $this->allowed_extensions)) {
                 $this->msg = '<div class="alert alert-danger">That file extension is not allowed!</div>';
                 $this->checkError($this->msg);
@@ -68,7 +69,6 @@
         public function errorsExist() {
             if(count($this->errors) > 0) {
                 $this->isValid = false;
-                $this->errors = [];
             }
             else {
                 $this->isValid = true;
