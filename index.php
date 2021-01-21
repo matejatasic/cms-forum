@@ -21,7 +21,7 @@
         <h2>News</h2>
     </div>
     <?php
-        if(isset($_SESSION['user_id'])) {
+        if(isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
             echo '
                 <div class="col-md-12 mb-3">
                     <a href="add_news.php" class="btn btn-primary float-right">Add news</a>
