@@ -45,18 +45,21 @@
                 }
                 else {
                     $result = $cms->result();
-                    
+
                     foreach($result as $row) {
+                        $time = $cms->timePassed($row['created_on']);
+                        $difference = $time[0];
+                        $str_interval = $time[1] !== 'now' ? $difference . ' ' . $time[1] . ' ago' : 'now';
                         echo '
                             <div class="col-md-4 mb-3">
-                                <div class="card">
+                                <div class="card h-100">
                                     <div class="card-header embed-responsive embed-responsive-16by9">
                                         <img src="'.$row['news_image'].'" alt="news_image" class="card-img-top embed-responsive-item">
                                     </div>
                                     <div class="card-body">
                                         <h3><a href="#">'.$row['news_title'].'</a></h3>
                                         <div class="mt-5 text-left font-2">
-                                            <p>By '.$row['news_author'].', 11 hours ago</p>
+                                            <p>By '.$row['news_author'].', '.$str_interval.'</p>
                                             <p>0 comments &nbsp;  
                                                 <span><i class="fas fa-star"></i></span>
                                                 <span><i class="fas fa-star"></i></span>
