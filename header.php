@@ -1,14 +1,30 @@
 <?php
     include('classes/CMS.php');
 
+    $dir = explode('\\', dirname(__FILE__));
+    $curr_dir = $dir[count($dir)-1];
+
     $cms = new CMS;
+    $admin;
     $user;
+    
+    if(isset($_SESSION['admin_id'])) {
+        $cms->data = array(
+            ':admin_id' => $_SESSION['admin_id'],
+        );
+
+        $cms->query = 'SELECT * FROM admin_table WHERE id = :admin_id';
+
+        $result = $cms->result();
+        $admin = $result[0];
+    }
+    
     if(isset($_SESSION['user_id'])) {
         $cms->data = array(
             ':user_id' => $_SESSION['user_id'],
         );
 
-        $cms->query = 'SELECT * FROM users_table where id = :user_id';
+        $cms->query = 'SELECT * FROM users_table WHERE id = :user_id';
 
         $result = $cms->result();
         $user = $result[0];
@@ -59,7 +75,7 @@
                 </ul>
                 <ul class="navbar-nav mr-left">
                     <?php 
-                        if(!isset($_SESSION['user_id'])) {
+                        if(!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
                             echo '
                             <li class="nav-item">
                                 <a class="nav-link" href="register.php">Register</a>
@@ -69,12 +85,29 @@
                             </li>      
                             ';
                         }
-                        else {
+                        else if(isset($_SESSION['user_id'])){
                             echo '
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle mr-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                         <img src="'.$user['user_image'].'" alt="user_image">
                                         <span id="username">'.$user['username'].'</span>
+                                    </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#">Profile</a>
+                                    <a class="dropdown-item" href="#">Settings</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="logout.php">Logout</a>
+                                </div>
+                            </li>
+                            ';
+                        }
+                        else if(isset($_SESSION['admin_id'])) {
+                            $img = $curr_dir !== 'admin' ? '.' . $admin['admin_image'] : '..' . $admin['admin_image'];
+                            echo '
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle mr-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <img src="'.$img.'" alt="admin_image">
+                                        <span id="username">'.$admin['admin_username'].'</span>
                                     </a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" href="#">Profile</a>
@@ -91,7 +124,8 @@
         </nav>
     </header>
     <!-- !header -->
-
+    <?php echo $_SESSION['admin_id']; ?>
     <!-- main -->
     <main>
+        <!-- container -->
         <div class="container mt-5 pt-5 text-center">
