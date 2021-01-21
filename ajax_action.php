@@ -134,6 +134,50 @@
     
                 echo json_encode($output);
             }
+
+            if($_POST['action'] === 'admin_login') {
+                $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+                if($email) {
+                    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+                    
+                    $cms->data = array(
+                        ':email' => $email,
+                    );
+    
+                    $cms->query = 'SELECT * FROM admin_table WHERE admin_email = :email';
+    
+                    $total_rows = $cms->total_rows();
+                    
+                    if($total_rows > 0) {
+                        $result = $cms->result();
+                        $result = $result[0];
+    
+                        if(password_verify($_POST['password'], $result['admin_password'])) {
+                            $_SESSION['admin_id'] = $result['id'];
+                            $output = array(
+                                'success' => true,
+                            );
+                        }
+                        else {
+                            $output = array(
+                                'error' => 'Wrong Password!',
+                            );
+                        }
+                    }
+                    else {
+                        $output = array(
+                            'error' => 'Wrong Email Address!',
+                        );
+                    }
+                }
+                else {
+                    $output = array(
+                        'error' => 'Email is not valid!',
+                    );
+                }
+    
+                echo json_encode($output);
+            }
         }
 
         //Execute this block of code if data is coming from a add_news page
