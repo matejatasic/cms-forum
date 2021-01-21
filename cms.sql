@@ -23,3 +23,15 @@ CREATE TABLE `cms`.`news_table` (
   `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `cms`.`admin_table` ( 
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `admin_email` VARCHAR(100) ,
+  `admin_password` INT(100) NOT NULL , 
+  `admin_username` VARCHAR(50) NOT NULL ,
+  `gender` VARCHAR(50) ,
+  `admin_image` VARCHAR(100) ,  
+  `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
