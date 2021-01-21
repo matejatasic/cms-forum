@@ -4,7 +4,7 @@
         <!-- !main --> 
 
         <!-- footer -->
-        <footer class="bg-primary text-white">
+        <footer class="bg-primary text-white mt-5">
             <div class="container pt-4">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
@@ -43,7 +43,7 @@
                         </p>
                     </div>
                     <div class="col-md-3 col-sm-6">
-                        <a href="admin_login">Admin Login</a>
+                        <a href="./admin/admin_login">Admin Login</a>
                     </div>
                 </div>
             </div>
