@@ -62,5 +62,22 @@
             $this->execute_query();
             return $this->statement->fetchAll();
         }
+
+        //Calculate and show how much time has passed since passing
+        //this data
+        public function timePassed($date) {
+            $date_created = new DateTime($date);
+            $date_now = new DateTime;
+
+            $difference = $date_created->diff($date_now);
+
+            if($difference->y > 0) return [$difference->y, $difference->y > 1 ? 'years' : 'year'];
+            else if($difference->m > 0) return [$difference->m, $difference->m > 1 ? 'months' : 'month'];
+            else if($difference->d > 0) return [$difference->d, $difference->d > 1 ? 'days' : 'day'];
+            else if($difference->h > 0) return [$difference->h, $difference->h > 1 ? 'hours' : 'hour'];
+            else if($difference->i > 0) return [$difference->i, $difference->i > 1 ? 'minutes' : 'minute'];
+            else if($difference->s > 0) return [$difference->s, $difference->s > 1 ? 'seconds' : 'second'];
+            else return ['now', 'now'];
+        }
     }
 ?>
