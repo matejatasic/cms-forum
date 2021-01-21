@@ -1,5 +1,5 @@
 <?php
-    include('./classes/CMS.php');
+    include('classes/CMS.php');
 
     $cms = new CMS;
     $user;
