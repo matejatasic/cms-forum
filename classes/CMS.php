@@ -57,6 +57,13 @@
             }
         }
 
+        //Redirect user if he is not logged in as admin
+        public function admin_session() {
+            if(!isset($_SESSION['admin_id'])) {
+                $this->redirect('index.php');
+            }
+        }
+
         //Return array of the executed statement
         public function result() {
             $this->execute_query();
