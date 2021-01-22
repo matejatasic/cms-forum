@@ -6,11 +6,22 @@
     <div class="col-md-12">
         <h1 class="text-center">Simple CMS</h1>
         <p class="font-1">Welcome to the simple Content Management System</p>
-        <p class="font-1">Login if you have an account or register if you don't to be able to post content on our blog and forum pages</p>
-        <div class="d-flex justify-content-center">
-            <a href="login.php" class="btn btn-primary mr-3">Login</a>
-            <a href="register.php" class="btn btn-success">Register</a>
-        </div>
+        <?php 
+            if(!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
+                echo '
+                    <p class="font-1">Login if you have an account or register if you don\'t to be able to post content on our blog and forum pages</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="login.php" class="btn btn-primary mr-3">Login</a>
+                        <a href="register.php" class="btn btn-success">Register</a>
+                    </div>
+                ';
+            }
+            else {
+                echo '
+                    <p class="font-1">Create content on our blog and forum pages</p>
+                ';
+            }
+        ?>
     </div>
 </div>
 <!-- !first row -->
