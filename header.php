@@ -1,8 +1,5 @@
 <?php
-    include('classes/CMS.php');
-
-    $dir = explode('\\', dirname(__FILE__));
-    $curr_dir = $dir[count($dir)-1];
+    include('./classes/CMS.php');
 
     $cms = new CMS;
     $admin;
@@ -72,6 +69,15 @@
                     <li class="nav-item">
                         <a class="nav-link" href="blog.php">Blog</a>
                     </li>
+                    <?php
+                        if(isset($_SESSION['admin_id'])) {
+                            echo '
+                                <li>
+                                    <a class="nav-link" href="admin/news_dash.php">Dashboard</a>
+                                </li>
+                            ';
+                        }
+                    ?>
                 </ul>
                 <ul class="navbar-nav mr-left">
                     <?php 
@@ -102,7 +108,7 @@
                             ';
                         }
                         else if(isset($_SESSION['admin_id'])) {
-                            $img = $curr_dir !== 'admin' ? '.' . $admin['admin_image'] : '..' . $admin['admin_image'];
+                            $img =  '.' . $admin['admin_image'];
                             echo '
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle mr-3" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -124,7 +130,7 @@
         </nav>
     </header>
     <!-- !header -->
-    <?php echo $_SESSION['admin_id']; ?>
+    
     <!-- main -->
     <main>
         <!-- container -->
