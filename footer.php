@@ -43,7 +43,7 @@
                         </p>
                     </div>
                     <div class="col-md-3 col-sm-6">
-                        <a href="./admin/admin_login.php">Admin Login</a>
+                        <a href="admin_login.php">Admin Login</a>
                     </div>
                 </div>
             </div>
