@@ -44,7 +44,10 @@
         <div class="container mt-2" id="news-container">
             <div class="row">
             <?php
-                $cms->query = 'SELECT * FROM news_table';
+                $cms->data = array(
+                    ':approved' => 1,
+                );
+                $cms->query = 'SELECT * FROM news_table WHERE approved = :approved';
                 $total_rows = $cms->total_rows();
 
                 if($total_rows === 0) {
