@@ -15,11 +15,11 @@ CREATE TABLE `cms`.`users_table` (
 
 CREATE TABLE `cms`.`news_table` ( 
   `id` INT NOT NULL AUTO_INCREMENT , 
-  `news_title` VARCHAR(255) NOT NULL ,
+  `news_title` VARCHAR(100) NOT NULL ,
   `news_body` VARCHAR(255) NOT NULL 
   `news_author` VARCHAR(50) NOT NULL ,
   `news_image` VARCHAR(150) NOT NULL ,
-  `approved` ENUM('0', '1') NOT NULL DEFAULT '0' 
+  `approved` ENUM('0', '1') NOT NULL DEFAULT '0' , 
   `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
@@ -27,11 +27,23 @@ CREATE TABLE `cms`.`news_table` (
 CREATE TABLE `cms`.`admin_table` ( 
   `id` INT NOT NULL AUTO_INCREMENT ,
   `admin_email` VARCHAR(100) ,
-  `admin_password` VARCHAR(100) NOT NULL , 
+  `admin_password` INT(100) NOT NULL , 
   `admin_username` VARCHAR(50) NOT NULL ,
   `gender` VARCHAR(50) ,
   `admin_image` VARCHAR(100) ,  
   `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `cms`.`blog_table` ( 
+  `id` INT NOT NULL AUTO_INCREMENT , 
+  `post_title` VARCHAR(100) NOT NULL , 
+  `post_body` VARCHAR(255) NOT NULL , 
+  `post_author` VARCHAR(50) NOT NULL , 
+  `post_image` VARCHAR(150) NOT NULL , 
+  `approved` ENUM('0', '1') NOT NULL DEFAULT '0' , 
+  `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
 
