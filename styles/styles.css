@@ -26,4 +26,6 @@ body {
     padding: 2%;
 }
 
-
+button i {
+    pointer-events: none;
+}
