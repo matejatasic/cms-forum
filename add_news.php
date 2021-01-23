@@ -1,102 +1,145 @@
 <?php
-    include('header.php');
+    include('./header.php');
 
-    $cms->user_session();
+    $cms->data = array(
+        ':approved' => 0,
+    );
+
+    $cms->query = 'SELECT * FROM news_table WHERE approved = :approved';
+
+    $total_rows = $cms->total_rows();
 ?>
-<div class="row pb-3">
-    <a href="index.php" class="btn btn-primary float-left">Back</a>
-</div>
-<div class="row mb-5">
-    <div class="col-md-6 mx-auto">
-        <div class="card">
-            <div class="card-header">
-                <h3>Add News</h3>
+<div class="col-md-9">
+    <div class="card">
+        <div class="card-header">
+            <h3>News Post Requests</h3>
+            <div id="message">
+                <?php 
+                    if(isset($_SESSION['msg'])) {
+                        echo $_SESSION['msg'];
+                        unset($_SESSION['msg']);
+                    }
+                ?>
             </div>
-            <div class="card-body">
-                <div id="message"></div>
-                <form method="post" id="news_form" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label class="float-left">News Title</label>
-                        <input type="text" name="news_title" id="news_title" class="form-control" placeholder="Enter News Title">
-                    </div>
-                    <div class="form-group">
-                        <label class="float-left">News Body</label>
-                        <textarea class="form-control" name="news_body" id="news_body" rows="3" placeholder="Enter News Text"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label class="float-left">News Image</label>
-                        <input type="file" class="form-control-file" name="news_image" id="news_image">
-                        <small class="float-left form-text text-muted">Supported file extensions: gif, jpeg, jpg, png</small>
-                    </div>
-                    <div class="form-group clearfix mt-5">
-                        <input type="hidden" name="page" value="add_news">
-                        <input type="hidden" name="action" value="add_news">
-                        <input type="submit" name="add_news" id="add_news" class="float-left btn btn-info" value="Add">
-                    </div>
-                </form>
-            </div>
+        </div>
+        <div class="card-body">
+            <?php
+                if($total_rows > 0) {
+                    $result = $cms->result();
+
+                    echo '
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>News Title</th>
+                                    <th>News Author</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    ';
+                    
+                    foreach($result as $row) {
+                        echo '
+                            <tr>
+                                <td>'.$row['news_title'].'</td>
+                                <td>'.$row['news_author'].'</td>
+                                <td class="d-flex justify-content-center">
+                                        <button type="submit" class="btn btn-success mr-3 accept '.$row['id'].'">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button type="submit" class="btn btn-danger reject '.$row['id'].'">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                </td>
+                            </tr>
+                        ';
+                    }
+
+                    echo '
+                            </tbody>
+                        </table>
+                    ';
+                }
+                else {
+                    echo '
+                        <p>No news addedd...</p>
+                    ';
+                }
+            ?>
         </div>
     </div>
 </div>
-
-<script src="./classes/Validate.js"></script>
+<!-- Custom js -->
 <script>
     $(document).ready(() => {
-        let validate = new Validate();
-        let message = $('#message');
+        //Execute if accpet news button is clicked
+        $('.accept').click((e) => {
+            e.preventDefault();
+            
+            let message = $('#message');
+            
+            let button = $(e.currentTarget);
+            let id = button.attr('class');
+            id = id[id.length-1];
 
-        $('#news_form').submit((e) => {
+            $.ajax({
+                url: "../ajax_action.php",
+                method: "POST",
+                data: {
+                    page: 'add_news',
+                    action: 'accept',
+                    id : id,
+                },
+                dataType: "json",
+                beforeSend: () => {
+                    button.attr('disabled', 'disabled');
+                },
+                success: (data) => {
+                    if(data.success) location.reload();
+                },
+                error: (xhr, ajaxOptions, thrownError) => {
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                    message.html('<div class="alert alert-danger">There was an error while trying to confirm the news...</div>');
+                },
+            });
+        });
+
+        //Execute if reject news button is clicked
+        $('.reject').click((e) => {
             e.preventDefault();
 
-            let form = $('#news_form').get(0);
-            let news_title = $('#news_title').val();
-            let news_body = $('#news_body').val();
-            let news_image = $('#news_image').val();
+            let message = $('#message');
             
-            //Check if all fields are valid
-            validate.isEmpty(news_title, news_body, news_image);
-            validate.showErrors(message);  
+            let button = $(e.currentTarget);
+            let id = button.attr('class');
+            id = id[id.length-1];
 
-            //If all fields are valid, send the data to the ajax_action.php
-            if(validate.isValid) {
-                $.ajax({
-                    url: "ajax_action.php",
-                    method: "POST",
-                    data: new FormData(form),
-                    dataType: "json",
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    beforeSend: () => {
-                        $('#add_news').attr('disabled', 'disabled');
-                        $('#add_news').val('Please wait...');
-                    },
-                    success: (data) => {
-                        if(data.success) {
-                            validate.showSuccess(message, data.success);
-                        }
-                        else {
-                            if(typeof(data.error) === 'string') {
-                                message.html('<div class="alert alert-danger">'+data.error+'</div>');
-                            }
-                            else {
-                                validate.errors = data.error;
-                                validate.showErrors(message);
-                            }
-                        }
-                        $('#add_news').attr('disabled', false);
-                        $('#add_news').val('Register');
-                    },
-                    error: (xhr, ajaxOptions, thrownError) => {
-                        console.log(xhr.status);
-                        console.log(thrownError);
-                        message.html('<div class="alert alert-danger">There was an error while trying to register...</div>');
-                    },
-                });
-            }
+            $.ajax({
+                url: "../ajax_action.php",
+                method: "POST",
+                data: {
+                    page: 'add_news',
+                    action: 'reject',
+                    id : id,
+                },
+                dataType: "json",
+                beforeSend: () => {
+                    button.attr('disabled', 'disabled');
+                },
+                success: (data) => {
+                    if(data.success) location.reload();
+                },
+                error: (xhr, ajaxOptions, thrownError) => {
+                    console.log(xhr.status);
+                    console.log(thrownError);
+                    message.html('<div class="alert alert-danger">There was an error while trying to reject the news...</div>');
+                },
+            });
         });
     });
 </script>
 <?php
-    include('footer.php');
+    include('../footer.php');
 ?>
