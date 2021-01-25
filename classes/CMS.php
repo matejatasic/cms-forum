@@ -50,9 +50,9 @@
             exit();
         }
 
-        //Redirect the user if he is not logged in to the index page 
+        //Redirect the user if he is not logged in either as admin or simple user to the index page 
         public function user_session() {
-            if(!isset($_SESSION['user_id'])) {
+            if(!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
                 $this->redirect('index.php');
             }
         }
