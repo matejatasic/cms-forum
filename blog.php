@@ -12,7 +12,7 @@
         if(isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
             echo '
                 <div class="col-md-12 mb-3">
-                    <a href="add_blog_post.php" class="btn btn-primary float-right">Add post</a>
+                    <a href="add_blog.php" class="btn btn-primary float-right">Add post</a>
                 </div>  
             ';
         }
