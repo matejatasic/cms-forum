@@ -86,5 +86,14 @@
             else if($difference->s > 0) return [$difference->s, $difference->s > 1 ? 'seconds' : 'second'];
             else return ['now', 'now'];
         }
+
+        //Shorten the text to a certain amount of characters and add '...' at the end
+        public function shortenText($str, $limit) {
+            if(strlen($str) > $limit) {
+                $str = substr($str, 0, $limit) . '...';
+            }
+
+            return $str;
+        }
     }
 ?>
