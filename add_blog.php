@@ -1,10 +1,10 @@
 <?php
-    include('header.php');
+    include('./header.php');
 
     $cms->user_session();
 ?>
 <div class="row pb-3">
-    <a href="index.php" class="btn btn-primary float-left">Back</a>
+    <a href="blog.php" class="btn btn-primary float-left">Back</a>
 </div>
 <div class="row mb-5">
     <div class="col-md-6 mx-auto">
@@ -45,7 +45,7 @@
         let validate = new Validate();
         let message = $('#message');
 
-        $('#news_form').submit((e) => {
+        $('#blog_form').submit((e) => {
             e.preventDefault();
 
             let form = $('#blog_form').get(0);
@@ -98,5 +98,5 @@
     });
 </script>
 <?php
-    include('footer.php');
+    include('./footer.php');
 ?>
