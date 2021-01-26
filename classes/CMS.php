@@ -64,6 +64,13 @@
             }
         }
 
+        //Redirect the user from the page if he is logged in as a normal user or admin
+        public function userNotAllowed() {
+            if(isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
+                $this->redirect('index.php');
+            }
+        }
+
         //Return array of the executed statement
         public function result() {
             $this->execute_query();
