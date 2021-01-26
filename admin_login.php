@@ -1,5 +1,7 @@
 <?php
     include('./header.php');
+
+    $cms->userNotAllowed();
 ?>
 <div class="row pb-3">
     <a href="../index.php" class="btn btn-primary float-left">Back</a>
