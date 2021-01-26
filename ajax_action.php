@@ -180,8 +180,8 @@
             }
         }
 
-        //Execute this block of code if data is coming from a add_news page
-        //and we check this by checking if the hidden value for page is add_news
+        //Execute this block of code if data is coming from a add_news page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is add_news
         if($_POST['page'] === 'add_news') {
             //Execute this block of code if data is coming from the add_news page
             //and we check this by checking if the hidden value for action is add_news
@@ -200,14 +200,16 @@
                 if($validate->isValid) {
                     //Get the username of the user that is submitting the news
                     $cms->data = array(
-                        ':user_id' => $_SESSION['user_id'],
+                        ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
                     );
                     
-                    $cms->query = 'SELECT * FROM users_table WHERE id = :user_id';
+                    $cms->query = isset($_SESSION['user_id']) ? 'SELECT * FROM users_table WHERE id = :user_id' : 'SELECT * FROM admin_table WHERE id = :user_id';
                     
                     $result = $cms->result();
-                    
-                    $username = $result[0]['username'];
+
+                    $result = $result[0];
+
+                    $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
                 
                     //Sanitize data, encrypt the password, store gender in a variable, move image to images folder
                     //and return new image name
@@ -289,6 +291,73 @@
                 );
 
                 $_SESSION['msg'] = '<div class="alert alert-success">Successfully rejected the news!</div>';
+
+                echo json_encode($output);
+            }
+        }
+
+        //Execute this block of code if data is coming from a add_blog page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is add_blog
+        if($_POST['page'] === 'add_blog') {
+            //Execute this block of code if data is coming from the add_blog page
+            //and we check this by checking if the hidden value for action is add_blog
+            if($_POST['action'] === 'add_blog') {
+                //Get data relevant for moving file into images folder and
+                //sending filepath to the database
+                $cms->filedata = $_FILES['post_image'];
+
+                //Validate data on serverside
+                $validate->isEmpty($_POST['post_title'], $_POST['post_body']);
+                $validate->imageUploaded($cms->filedata);
+                $validate->allowedExtension($cms->filedata);
+                $validate->checkImageSize($cms->filedata);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Get the username of the user that is submitting the news
+                    $cms->data = array(
+                        ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
+                    );
+                    
+                    $cms->query = isset($_SESSION['user_id']) ? 'SELECT * FROM users_table WHERE id = :user_id' : 'SELECT * FROM admin_table WHERE id = :user_id';
+                    
+                    $result = $cms->result();
+                    
+                    $result = $result[0];
+
+                    $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
+                
+                    //Sanitize data, encrypt the password, store gender in a variable, move image to images folder
+                    //and return new image name
+                    $post_title = filter_var($_POST['post_title'], FILTER_SANITIZE_STRING);
+                    $post_body = filter_var($_POST['post_body'], FILTER_SANITIZE_STRING);
+                    $post_image = $cms->move_user_image('blog_images');
+
+                    //Insert data into the database
+                    $cms->data = array(
+                        ':post_title' => $post_title,
+                        ':post_body' => $post_body,
+                        ':post_author' => $username,
+                        ':post_image' => $post_image,
+                        ':approved' => 0,
+                    );
+
+                    $cms->query = 'INSERT INTO blog_table(post_title, post_body, post_author, post_image, approved) 
+                    VALUES (:post_title, :post_body, :post_author, :post_image, :approved)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd the blog post!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+                
+                $validate->errors = [];
 
                 echo json_encode($output);
             }
