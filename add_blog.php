@@ -85,7 +85,7 @@
                             }
                         }
                         $('#add_blog').attr('disabled', false);
-                        $('#add_blog').val('Register');
+                        $('#add_blog').val('Add');
                     },
                     error: (xhr, ajaxOptions, thrownError) => {
                         console.log(xhr.status);
