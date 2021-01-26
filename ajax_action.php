@@ -361,6 +361,55 @@
 
                 echo json_encode($output);
             }
+
+            //Execute this block of code if the accept news button is pressed
+            if($_POST['action'] == 'accept') {
+                $cms->data = array(
+                    ':approved' => 1,
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'UPDATE blog_table SET approved = :approved WHERE id = :id';
+
+                $cms->execute_query();
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully confirmed the post!</div>';
+
+                echo json_encode($output);
+            }
+            
+            //Execute this block of code if the reject post button is pressed
+            if($_POST['action'] == 'reject') {
+                $cms->data = array(
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'SELECT * FROM blog_table WHERE id = :id';
+
+                $result = $cms->result();
+                $result = $result[0];
+                
+                $path = dirname(__FILE__) . '\\' . $result['post_image'];
+                $path = str_replace('/', '\\', $path);
+
+                $cms->query = 'DELETE FROM blog_table WHERE id = :id';
+
+                $cms->execute_query();
+
+                if(file_exists($path)) unlink($path);
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully rejected the post!</div>';
+
+                echo json_encode($output);
+            }
         }
     }
 ?>
