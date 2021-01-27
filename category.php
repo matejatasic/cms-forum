@@ -16,7 +16,7 @@
         if(isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
             echo '
                 <div class="col-md-12 mb-3">
-                    <a href="add_topic.php" class="btn btn-primary float-right">Add topic</a>
+                    <a href="add_topic.php?id='.$id.'" class="btn btn-primary float-right">Add topic</a>
                 </div>  
             ';
         }
@@ -48,9 +48,6 @@
                             $result = $cms->result();
 
                             foreach($result as $row) {
-                                $time = $cms->timePassed($row['created_on']);
-                                $difference = $time[0];
-                                $str_interval = $time[1] !== 'now' ? $difference . ' ' . $time[1] . ' ago' : 'now';
                                 echo '
                                     <tr class="t-row" id="'.$row['id'].'">
                                         <td>'.$row['cat_title'].'</td>
