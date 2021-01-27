@@ -21,7 +21,8 @@ body {
     height: 4rem;
 }
 
-#news-container {
+#news-container,
+#posts-container {
     background-color: white;
     padding: 2%;
 }
@@ -29,3 +30,14 @@ body {
 button i {
     pointer-events: none;
 }
+
+table tbody tr{
+    cursor: pointer;
+}
+
+table tbody tr:hover {
+    opacity: 0.8;
+}
+
+
+
