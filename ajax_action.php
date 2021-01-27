@@ -211,8 +211,7 @@
 
                     $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
                 
-                    //Sanitize data, encrypt the password, store gender in a variable, move image to images folder
-                    //and return new image name
+                    //Sanitize data, move image to images folder and return new image name
                     $news_title = filter_var($_POST['news_title'], FILTER_SANITIZE_STRING);
                     $news_body = filter_var($_POST['news_body'], FILTER_SANITIZE_STRING);
                     $news_image = $cms->move_user_image('news_images');
@@ -327,8 +326,7 @@
 
                     $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
                 
-                    //Sanitize data, encrypt the password, store gender in a variable, move image to images folder
-                    //and return new image name
+                    //Sanitize data, move image to images folder and return new image name
                     $post_title = filter_var($_POST['post_title'], FILTER_SANITIZE_STRING);
                     $post_body = filter_var($_POST['post_body'], FILTER_SANITIZE_STRING);
                     $post_image = $cms->move_user_image('blog_images');
@@ -407,6 +405,49 @@
                 );
 
                 $_SESSION['msg'] = '<div class="alert alert-success">Successfully rejected the post!</div>';
+
+                echo json_encode($output);
+            }
+        }
+        
+        //Execute this block of code if data is coming from a add_category page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is add_category
+        if($_POST['page'] === 'add_category') {
+            //Execute this block of code if data is coming from the add_category page
+            //and we check this by checking if the hidden value for action is add_category
+            if($_POST['action'] === 'add_category') {
+                //Validate data on serverside
+                $validate->isEmpty($_POST['category_title'], $_POST['category_desc']);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Sanitize data, move image to images folder
+                    //and return new image name
+                    $category_title = filter_var($_POST['category_title'], FILTER_SANITIZE_STRING);
+                    $category_desc = filter_var($_POST['category_desc'], FILTER_SANITIZE_STRING);
+
+                    //Insert data into the database
+                    $cms->data = array(
+                        ':category_title' => $category_title,
+                        ':category_desc' => $category_desc,
+                    );
+
+                    $cms->query = 'INSERT INTO forum_categories(cat_title, cat_description) 
+                    VALUES (:category_title, :category_desc)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd forum category!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+                
+                $validate->errors = [];
 
                 echo json_encode($output);
             }
