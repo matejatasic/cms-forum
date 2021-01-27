@@ -84,7 +84,7 @@
                     error: (xhr, ajaxOptions, thrownError) => {
                         console.log(xhr.status);
                         console.log(thrownError);
-                        message.html('<div class="alert alert-danger">There was an error while trying to register...</div>');
+                        message.html('<div class="alert alert-danger">There was an error while trying to add the category...</div>');
                     },
                 });
             }
