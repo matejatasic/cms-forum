@@ -421,8 +421,7 @@
                 $validate->errorsExist();
 
                 if($validate->isValid) {
-                    //Sanitize data, move image to images folder
-                    //and return new image name
+                    //Sanitize data
                     $category_title = filter_var($_POST['category_title'], FILTER_SANITIZE_STRING);
                     $category_desc = filter_var($_POST['category_desc'], FILTER_SANITIZE_STRING);
 
@@ -434,6 +433,75 @@
 
                     $cms->query = 'INSERT INTO forum_categories(cat_title, cat_description) 
                     VALUES (:category_title, :category_desc)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd forum category!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+                
+                $validate->errors = [];
+
+                echo json_encode($output);
+            }
+        }
+        
+        //Execute this block of code if data is coming from a add_topic page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is add_topic
+        if($_POST['page'] === 'add_topic') {
+            //Execute this block of code if data is coming from the add_topic page
+            //and we check this by checking if the hidden value for action is add_topic
+            if($_POST['action'] === 'add_topic') {
+                //Validate data on serverside
+                $validate->isEmpty($_POST['topic_title'], $_POST['post_content']);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Get the username of the user that is submitting the news
+                    $cms->data = array(
+                        ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
+                    );
+                    
+                    $cms->query = isset($_SESSION['user_id']) ? 'SELECT * FROM users_table WHERE id = :user_id' : 'SELECT * FROM admin_table WHERE id = :user_id';
+                    
+                    $result = $cms->result();
+                    
+                    $result = $result[0];
+
+                    $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
+
+                    //Sanitize data
+                    $topic_title = filter_var($_POST['topic_title'], FILTER_SANITIZE_STRING);
+                    $post_content = filter_var($_POST['post_content'], FILTER_SANITIZE_STRING);
+
+                    //Insert data into the topic table and get the id of that row
+                    $cms->data = array(
+                        ':topic_title' => $topic_title,
+                        ':topic_category' => $_POST['category_id'],
+                        ':topic_author' => $username,
+                        ':approved' => 0,
+                    );
+
+                    $cms->query = 'INSERT INTO forum_topics(topic_title, topic_category, topic_author, approved) 
+                    VALUES (:topic_title, :topic_category, :topic_author, :approved)';
+
+                    $topic_id = $cms->lastId();
+
+                    //Insert data into posts table
+                    $cms->data = array(
+                        ':post_content' => $post_content,
+                        ':post_topic' => $topic_id,
+                        ':post_author' => $username,
+                    );
+
+                    $cms->query = 'INSERT INTO forum_posts(post_content, post_topic, post_author) 
+                    VALUES (:post_content, :post_topic, :post_author)';
 
                     $cms->execute_query();
 
