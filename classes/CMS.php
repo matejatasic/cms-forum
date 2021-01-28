@@ -33,6 +33,12 @@
             return $this->statement->rowCount();
         }
 
+        //Return last inserted id
+        public function lastId() {
+            $this->execute_query();
+            return $this->connection->lastInsertId();
+        }
+
         //Move file to specific folder
         public function move_user_image($image_folder) {
             $file_extension = pathinfo($this->filedata['name'], PATHINFO_EXTENSION);
