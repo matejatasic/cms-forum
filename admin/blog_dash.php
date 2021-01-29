@@ -63,7 +63,7 @@
                 }
                 else {
                     echo '
-                        <p>No news addedd...</p>
+                        <p>No blog posts have been added...</p>
                     ';
                 }
             ?>
