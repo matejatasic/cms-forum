@@ -27,17 +27,45 @@ body {
     padding: 2%;
 }
 
+.news_image {
+    width: 60%;
+    height: auto;
+    margin: auto;
+}
+
 button i {
     pointer-events: none;
 }
 
 table tbody tr{
     cursor: pointer;
+    background-color: rgba(31, 31, 88, 0.8);
 }
 
 table tbody tr:hover {
-    opacity: 0.8;
+    opacity: 0.5;
 }
+
+.topic-posts tbody tr .post-user {
+    width: 20%;
+    border-right: 1px solid black;
+}
+
+.topic-posts tbody tr .post-user div{
+    padding: 25% 0;
+    text-align: center;
+}
+
+.topic-posts tbody tr,
+.topic-requests tbody tr {
+    cursor: auto;
+    background-color: rgba(31, 31, 88, 0.8);
+} 
+
+.topic-posts tbody tr:hover,
+.topic-requests tbody tr:hover{
+    opacity: 1;
+} 
 
 
 
