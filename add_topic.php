@@ -6,7 +6,7 @@
     $id = $_GET['id'];
 ?>
 <div class="row pb-3">
-    <a href="category.php" class="btn btn-primary float-left">Back</a>
+    <a href="category.php?id=<?php echo $id; ?>" class="btn btn-primary float-left">Back</a>
 </div>
 <div class="row mb-5">
     <div class="col-md-6 mx-auto">
