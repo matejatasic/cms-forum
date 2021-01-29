@@ -313,7 +313,7 @@
                 $validate->errorsExist();
 
                 if($validate->isValid) {
-                    //Get the username of the user that is submitting the news
+                    //Get the username of the user that is submitting the blog post
                     $cms->data = array(
                         ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
                     );
@@ -463,7 +463,7 @@
                 $validate->errorsExist();
 
                 if($validate->isValid) {
-                    //Get the username of the user that is submitting the news
+                    //Get the username of the user that is submitting the topic
                     $cms->data = array(
                         ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
                     );
@@ -506,7 +506,101 @@
                     $cms->execute_query();
 
                     $output = array(
-                        'success' => 'Successfully addedd forum category!',
+                        'success' => 'Successfully addedd forum topic!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+                
+                $validate->errors = [];
+
+                echo json_encode($output);
+            }
+
+            //Execute this block of code if the accept topic button is pressed
+            if($_POST['action'] === 'accept') {
+                $cms->data = array(
+                    ':approved' => 1,
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'UPDATE forum_topics SET approved = :approved WHERE id = :id';
+
+                $cms->execute_query();
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully confirmed the topic!</div>';
+
+                echo json_encode($output);
+            }
+
+            //Execute this block of code if the reject topic button is pressed
+            if($_POST['action'] == 'reject') {
+                $cms->data = array(
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'DELETE FROM blog_table WHERE id = :id';
+
+                $cms->execute_query();
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully rejected the topic!</div>';
+
+                echo json_encode($output);
+            }
+        }
+        
+        //Execute this block of code if data is coming from a add_post page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is add_post
+        if($_POST['page'] === 'add_post') {
+            //Execute this block of code if data is coming from the add_post page
+            //and we check this by checking if the hidden value for action is add_post
+            if($_POST['action'] === 'add_post') {
+                //Validate data on serverside
+                $validate->isEmpty($_POST['post_content']);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Get the username of the user that is submitting the post
+                    $cms->data = array(
+                        ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
+                    );
+                    
+                    $cms->query = isset($_SESSION['user_id']) ? 'SELECT * FROM users_table WHERE id = :user_id' : 'SELECT * FROM admin_table WHERE id = :user_id';
+                    
+                    $result = $cms->result();
+                    
+                    $result = $result[0];
+
+                    $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
+
+                    //Sanitize data
+                    $post_content = filter_var($_POST['post_content'], FILTER_SANITIZE_STRING);
+
+                    //Insert data into the post table
+                    $cms->data = array(
+                        ':post_content' => $post_content,
+                        ':post_topic' => $_POST['topic_id'],
+                        ':post_author' => $username,
+                    );
+
+                    $cms->query = 'INSERT INTO forum_posts(post_content, post_topic, post_author) 
+                    VALUES (:post_content, :post_topic, :post_author)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd forum post!',
                     );
                 }
                 else {
