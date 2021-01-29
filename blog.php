@@ -48,7 +48,7 @@
                                             <img src="'.$row['post_image'].'" alt="news_image" class="card-img-top embed-responsive-item">
                                         </div>
                                         <div class="card-body font-2 text-left">
-                                            <h3><a href="#">'.$row['post_title'].'</a></h3>
+                                            <h3><a href="blog_post.php?id='.$row['id'].'">'.$row['post_title'].'</a></h3>
                                             <p>'.$cms->shortenText($row['post_body'], 200).'</p>
                                             
                                             <div class="card-footer">
