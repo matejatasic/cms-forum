@@ -2,6 +2,7 @@
     include('../classes/CMS.php');
 
     $cms = new CMS;
+
     $cms->admin_session();
 
     $cms->data = array(
@@ -69,7 +70,7 @@
                             <a class="dropdown-item" href="#">Profile</a>
                             <a class="dropdown-item" href="#">Settings</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="logout.php">Logout</a>
+                            <a class="dropdown-item" href="../logout.php">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -88,9 +89,9 @@
                         <div class="card-header">Admin Dashboard</div>
                         <div class="card-body">
                             <div class="list-group">
-                                <a href="#" class="list-group-item list-group-item-action active">News</a>
-                                <a href="#" class="list-group-item list-group-item-action active">Posts</a>
-                                <a href="#" class="list-group-item list-group-item-action active">Threads</a>
+                                <a href="news_dash.php" class="list-group-item list-group-item-action active">News</a>
+                                <a href="blog_dash.php" class="list-group-item list-group-item-action active">Posts</a>
+                                <a href="topic_dash.php" class="list-group-item list-group-item-action active">Topics</a>
                                 <a href="#" class="list-group-item list-group-item-action active">Comments</a>
                             </div>
                         </div>
