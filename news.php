@@ -30,6 +30,7 @@
     <div class="col-md-12">
         <div class="container mt-2 p-5" id="posts-container">
             <div class="row">
+                <img src="<?php echo $result['news_image']; ?>" alt="news_image" class="news_image mb-3">
                 <p class="font-2"><?php echo nl2br($result['news_body']); ?></p>
                 <p class="mx-auto mt-3 font-2">News by <?php echo $result['news_author'] . ', ' . $result['created_on']; ?></p>
             </div>
