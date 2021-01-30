@@ -92,7 +92,7 @@
                                 <a href="news_dash.php" class="list-group-item list-group-item-action active">News</a>
                                 <a href="blog_dash.php" class="list-group-item list-group-item-action active">Posts</a>
                                 <a href="topic_dash.php" class="list-group-item list-group-item-action active">Topics</a>
-                                <a href="#" class="list-group-item list-group-item-action active">Comments</a>
+                                <a href="comments_dash.php" class="list-group-item list-group-item-action active">Comments</a>
                             </div>
                         </div>
                     </div>
