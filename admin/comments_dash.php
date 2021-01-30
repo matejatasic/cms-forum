@@ -102,7 +102,7 @@
                 url: "../ajax_action.php",
                 method: "POST",
                 data: {
-                    page: 'add_comment',
+                    page: 'blog_post',
                     action: 'accept',
                     id : id,
                 },
@@ -135,7 +135,7 @@
                 url: "../ajax_action.php",
                 method: "POST",
                 data: {
-                    page: 'add_comment',
+                    page: 'blog_post',
                     action: 'reject',
                     id : id,
                 },
