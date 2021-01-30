@@ -614,5 +614,99 @@
                 echo json_encode($output);
             }
         }
+        
+        //Execute this block of code if data is coming from a blog_post page 
+        //or related to the requests from it and we check this by checking if the hidden value for page is blog_post
+        if($_POST['page'] === 'blog_post') {
+            //Execute this block of code if data hidden value for action is add_comment
+            if($_POST['action'] === 'add_comment') {
+                //Validate data on serverside
+                $validate->isEmpty($_POST['comment_body']);
+                $validate->errorsExist();
+
+                if($validate->isValid) {
+                    //Get the username of the user that is submitting the post
+                    $cms->data = array(
+                        ':user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : $_SESSION['admin_id'],
+                    );
+                    
+                    $cms->query = isset($_SESSION['user_id']) ? 'SELECT * FROM users_table WHERE id = :user_id' : 'SELECT * FROM admin_table WHERE id = :user_id';
+                    
+                    $result = $cms->result();
+                    
+                    $result = $result[0];
+
+                    $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
+
+                    //Sanitize data
+                    $comment_body = filter_var($_POST['comment_body'], FILTER_SANITIZE_STRING);
+
+                    //Insert data into the post table
+                    $cms->data = array(
+                        ':comment_body' => $comment_body,
+                        ':post_id' => $_POST['post_id'],
+                        ':comment_author' => $username,
+                        ':approved' => 0,
+                    );
+
+                    $cms->query = 'INSERT INTO comments_table(comment_body, post_id, comment_author, approved) 
+                    VALUES (:comment_body, :post_id, :comment_author, :approved)';
+
+                    $cms->execute_query();
+
+                    $output = array(
+                        'success' => 'Successfully addedd the comment!',
+                    );
+                }
+                else {
+                    $output = array(
+                        'error' => $validate->errors,
+                    );
+                }
+                
+                $validate->errors = [];
+
+                echo json_encode($output);
+            }
+
+            //Execute this block of code if the accept comment button is pressed
+            if($_POST['action'] == 'accept') {
+                $cms->data = array(
+                    ':approved' => 1,
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'UPDATE comments_table SET approved = :approved WHERE id = :id';
+
+                $cms->execute_query();
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully confirmed the comment!</div>';
+
+                echo json_encode($output);
+            }
+            
+            //Execute this block of code if the reject comment button is pressed
+            if($_POST['action'] == 'reject') {
+                $cms->data = array(
+                    ':id' => $_POST['id'],
+                );
+
+                $cms->query = 'DELETE FROM comments_table WHERE id = :id';
+
+                $cms->execute_query();
+
+                $output = array(
+                    'success' => true,
+                );
+
+                $_SESSION['msg'] = '<div class="alert alert-success">Successfully rejected the comment!</div>';
+
+                echo json_encode($output);
+            }
+        }
     }
 ?>
