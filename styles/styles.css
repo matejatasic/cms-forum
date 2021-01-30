@@ -27,7 +27,8 @@ body {
     padding: 2%;
 }
 
-.news_image {
+.news_image,
+.post_image {
     width: 60%;
     height: auto;
     margin: auto;
@@ -57,15 +58,34 @@ table tbody tr:hover {
 }
 
 .topic-posts tbody tr,
-.topic-requests tbody tr {
+.topic-requests tbody tr,
+.comment-requests tbody tr {
     cursor: auto;
     background-color: rgba(31, 31, 88, 0.8);
 } 
 
 .topic-posts tbody tr:hover,
-.topic-requests tbody tr:hover{
+.topic-requests tbody tr:hover,
+.comment-requests tbody tr:hover {
     opacity: 1;
-} 
+}
 
+.comment-requests tbody tr td {
+    text-align: center;
+    vertical-align: middle;
+}
 
+#comment_body {
+    width: 50%;
+    clear: both;
+}
 
+.comment-card {
+    border: 1px solid white;
+    background-color: rgba(124, 124, 124, 0.384);
+    box-shadow: 2px 2px 2px 2px rgba(128, 128, 128, 0.555);
+}
+
+.comment-card p {
+    margin: auto;
+}
