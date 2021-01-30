@@ -89,3 +89,11 @@ table tbody tr:hover {
 .comment-card p {
     margin: auto;
 }
+
+.commentNum {
+    display: inline-block;
+    margin-left: 4rem;
+}
+
+
+
