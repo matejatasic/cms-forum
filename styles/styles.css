@@ -93,7 +93,5 @@ table tbody tr:hover {
 .commentNum {
     display: inline-block;
     margin-left: 4rem;
+    margin-right: 0.5rem;
 }
-
-
-
