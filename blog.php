@@ -38,9 +38,15 @@
                         $result = $cms->result();
 
                         foreach($result as $row) {
-                            $time = $cms->timePassed($row['created_on']);
-                            $difference = $time[0];
-                            $str_interval = $time[1] !== 'now' ? $difference . ' ' . $time[1] . ' ago' : 'now';
+                            $cms->data = array(
+                                ':post_id' => $row['id'],
+                                ':approved' => 1,
+                            );
+
+                            $cms->query = 'SELECT * FROM comments_table WHERE post_id = :post_id AND approved = :approved';
+
+                            $comments = $cms->total_rows();
+
                             echo '
                                 <div class="col-md-4 mb-3">
                                     <div class="card h-100">
@@ -53,7 +59,7 @@
                                             
                                             <div class="card-footer">
                                                 <p>Post by '.$row['post_author'].'</p>
-                                                <p>'.date('F d, Y', strtotime($row['created_on'])).'</p>
+                                                <p>'.date('F d, Y', strtotime($row['created_on'])).'<span class="commentNum">'.$comments.'</span><i class="fas fa-comments"></i></p>
                                             </div> 
                                         </div>
                                     </div>
