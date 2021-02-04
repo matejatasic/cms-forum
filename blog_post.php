@@ -56,11 +56,16 @@
                                 ';
                             }
                             else {
+                                $result = $cms->result();
                                 foreach($result as $row) {
+                                    $time = $cms->timePassed($row['created_on']);
+                                    $difference = $time[0];
+                                    $str_interval = $time[1] !== 'now' ? $difference . ' ' . $time[1] . ' ago' : 'now';
                                     echo '
                                     <div class="comment-card p-3 font-2">
-                                        <p>'.$row['comment_author'].' <span>'.$cms->timePassed($_row['created_on']).'</span></p>
-                                        <p>'.$row['comment_body'].'</p>
+                                        <p class="text-center">'.$row['comment_author'].'</p>
+                                        <p class="text-center mt-1">'.$str_interval.'</p>
+                                        <p class="mt-1">'.$row['comment_body'].'</p>
                                     </div> 
                                     ';
                                 }
