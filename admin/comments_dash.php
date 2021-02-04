@@ -12,7 +12,7 @@
 <div class="col-md-9">
     <div class="card">
         <div class="card-header">
-            <h3>Blog Post Requests</h3>
+            <h3>Blog Comment Requests</h3>
             <div id="message">
                 <?php 
                     if(isset($_SESSION['msg'])) {
