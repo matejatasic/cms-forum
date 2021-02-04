@@ -584,6 +584,8 @@
 
                     $username = array_key_exists('username', $result) ? $result['username'] : $result['admin_username'];
 
+                    $is_admin = isset($_SESSION['admin_id']) ? 1 : 0;
+
                     //Sanitize data
                     $post_content = filter_var($_POST['post_content'], FILTER_SANITIZE_STRING);
 
@@ -592,10 +594,11 @@
                         ':post_content' => $post_content,
                         ':post_topic' => $_POST['topic_id'],
                         ':post_author' => $username,
+                        ':is_admin' => $is_admin
                     );
 
-                    $cms->query = 'INSERT INTO forum_posts(post_content, post_topic, post_author) 
-                    VALUES (:post_content, :post_topic, :post_author)';
+                    $cms->query = 'INSERT INTO forum_posts(post_content, post_topic, post_author, is_admin) 
+                    VALUES (:post_content, :post_topic, :post_author, :is_admin)';
 
                     $cms->execute_query();
 
