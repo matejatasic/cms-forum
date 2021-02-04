@@ -95,3 +95,9 @@ table tbody tr:hover {
     margin-left: 4rem;
     margin-right: 0.5rem;
 }
+
+.post-img {
+    width: 50%;
+    height: auto;
+    margin: 0 auto;
+}
