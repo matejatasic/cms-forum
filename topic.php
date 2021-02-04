@@ -55,10 +55,20 @@
                         $result = $cms->result();
 
                         foreach($result as $row) {
+                            $cms->data = array(
+                                ':user' => $row['post_author'],
+                            );
+
+                            $cms->query = $row['is_admin'] === '0' ? 'SELECT user_image FROM users_table WHERE username = :user' : 'SELECT admin_image FROM admin_table WHERE admin_username = :user';
+
+                            $user = $cms->result();
+                            $user = $user[0][0];
+                            
                             echo '
                                 <tr>
                                     <td class="post-user">
                                         <div>
+                                            <img src="'.$user.'" class="post-img mb-2" alt="user_image">
                                             <p>'.$row['post_author'].'</p>
                                             <p>'.$row['created_on'].'</p>
                                         </div>
